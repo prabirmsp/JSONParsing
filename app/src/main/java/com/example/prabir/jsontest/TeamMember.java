@@ -1,5 +1,9 @@
 package com.example.prabir.jsontest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by prabir on 2/16/15.
  */
@@ -18,7 +22,26 @@ public class TeamMember {
     protected String homepageurl = "";
     protected String linkedurl = "";
 
+    public TeamMember (JSONObject person) {
+        try {
+            this.name = person.getString("name");
+            this.category = person.getString("category");
+            this.year = person.getString("year");
+            this.role = person.getString("role");
+            this.cellphone = person.getString("cellphone");
+            this.email = person.getString("email");
+            this.image = person.getString("image");
+            this.giturl = person.getString("giturl");
+            this.twitterurl = person.getString("twitterurl");
+            this.homepageurl = person.getString("homepageurl");
+            this.linkedurl = person.getString("linkedurl");
+        }
+        catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
 
+        }
+    }
 
     public TeamMember (String category, String name, String year, String role, String cellphone,
                        String email, String image, String giturl, String twitterurl, String homepageurl,

@@ -18,13 +18,14 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.ListView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
     /*
-    *
+    * FROM TUTORIAL:
     * http://www.newthinktank.com/2013/07/android-development-15/
     *
     * */
@@ -118,7 +119,7 @@ public class MainActivity extends Activity {
 
 
                 // Print out all the data read in
-                Log.v("JSONParser RESULT ", result);
+                // Log.v("JSONParser RESULT ", result);
 
                 // Get the root JSONObject
                 jsonObject = new JSONObject(result);
@@ -133,23 +134,8 @@ public class MainActivity extends Activity {
                     JSONObject person = members.getJSONObject(i);
                     // name += person.getString("name") + ", ";
 
-                    mAppDevTeam[i] = new TeamMember(
-                            person.getString("category"),
-                            person.getString("name"),
-                            person.getString("year"),
-                            person.getString("role"),
-                            person.getString("cellphone"),
-                            person.getString("email"),
-                            person.getString("image"),
-                            person.getString("giturl"),
-                            person.getString("twitterurl"),
-                            person.getString("homepageurl"),
-                            person.getString("linkedurl"));
+                    mAppDevTeam[i] = new TeamMember(person);
                 }
-
-
-
-
 
             } catch (JSONException e) {
                 // TODO Auto-generated catch block
