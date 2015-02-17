@@ -15,11 +15,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MainActivity extends ActionBarActivity {
@@ -34,7 +36,10 @@ public class MainActivity extends ActionBarActivity {
     static final String teamMemberInfo = "http://www.cs.grinnell.edu/~owusumic17/android.json";
 
     // Will hold the values I pull from the JSON
-    TeamMember [] mAppDevTeam;
+    protected JSONArray mJSONArrayMembers;
+    protected TeamMember[] mAppDevTeam;
+
+    protected ListView mListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,14 +129,14 @@ public class MainActivity extends ActionBarActivity {
                 // Get the root JSONObject
                 jsonObject = new JSONObject(result);
 
-                JSONArray members = jsonObject.getJSONArray("members");
+                mJSONArrayMembers = jsonObject.getJSONArray("members");
 
                 // Get the JSON Strings in the quote object
 
-                mAppDevTeam = new TeamMember[members.length()];
+                mAppDevTeam = new TeamMember[mJSONArrayMembers.length()];
 
-                for (int i = 0; i < members.length(); i++) {
-                    JSONObject person = members.getJSONObject(i);
+                for (int i = 0; i < mJSONArrayMembers.length(); i++) {
+                    JSONObject person = mJSONArrayMembers.getJSONObject(i);
                     // name += person.getString("name") + ", ";
 
                     mAppDevTeam[i] = new TeamMember(person);
@@ -148,22 +153,33 @@ public class MainActivity extends ActionBarActivity {
 
         protected void onPostExecute(String result) {
 
-    // Construct the data source
-                ArrayList<TeamMember> arrayOfUsers = new ArrayList<TeamMember>();
+            // Construct the data source
+            ArrayList<TeamMember> arrayOfUsers = new ArrayList<TeamMember>();
 
-    // Create the adapter to convert the array to views
-                MembersAdapter adapter = new MembersAdapter(MainActivity.this, arrayOfUsers);
-
+            // Create the adapter to convert the array to views
+            MembersAdapter adapter = new MembersAdapter(MainActivity.this, arrayOfUsers);
 
 
             for (int i = 0; i < mAppDevTeam.length; i++) {
                 adapter.add(mAppDevTeam[i]);
             }
-    // Attach the adapter to a ListView
-                ListView listView = (ListView) findViewById(R.id.listView);
-                listView.setAdapter(adapter);
-
-
+            mListView = (ListView) findViewById(R.id.listView);
+            // Attach the adapter to a ListView
+            mListView.setAdapter(adapter);
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    try {
+                        Intent intent = new Intent(MainActivity.this, MoreInformation.class);
+                        String extra = mJSONArrayMembers.getJSONObject(position).toString();
+                        intent.putExtra("PERSON", extra);
+                        startActivity(intent);
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            });
 
 
         }

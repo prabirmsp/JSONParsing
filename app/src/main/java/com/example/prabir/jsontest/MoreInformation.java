@@ -1,17 +1,48 @@
 package com.example.prabir.jsontest;
 
+import android.content.Intent;
+import android.media.Image;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MoreInformation extends ActionBarActivity {
+
+    protected TeamMember mSelectedMember;
+    protected ImageView mProfileImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more_information);
+
+        try {
+            String JSONObjectString = getIntent().getStringExtra("PERSON");
+            JSONObject person = new JSONObject(JSONObjectString);
+            mSelectedMember = new TeamMember(person);
+        }
+        catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        mProfileImageView = (ImageView)findViewById(R.id.profileImageView);
+        if (mSelectedMember.image.equals("http://www.cs.grinnell.edu/~owusumic17/img/android-round.png"))
+            mProfileImageView.setImageDrawable(getResources().getDrawable(R.drawable.avatar));
+        else
+            Picasso.with(this).load(mSelectedMember.image).into(mProfileImageView);
+
+
     }
 
 
